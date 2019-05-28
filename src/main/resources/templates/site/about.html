@@ -33,11 +33,11 @@
 
                     	<header>
 
-                        	<h2><span>Hi! </span> My name is Winter.</h2>
+                        	<h2><span>Hi! </span> My name is Hiki.</h2>
 
                         </header>
 
-                        <p>I’m a Java Developer with an enduring interest in Coding and Write Blog</p>
+                        <p>兴趣使然</p>
 
                     </article>
 
@@ -65,37 +65,70 @@
 
                 <!-- thumbnails -->
 
-                	<div class="thumbnails-pan">
-                        <th:block th:each="link,linkStat : ${links}">
-                            <th:block th:if="${linkStat.index < 3}">
-                                <section class="col-xs-12 col-sm-4 col-md-4 col-lg-4 ">
+<!--                	<div class="thumbnails-pan">-->
+<!--                        <th:block th:each="link,linkStat : ${links}">-->
+<!--                            <th:block th:if="${linkStat.index < 3}">-->
+<!--                                <section class="col-xs-12 col-sm-4 col-md-4 col-lg-4 ">-->
 
-                                    <figure>
+<!--                                    <figure>-->
 
-                                        <img th:src="@{'/site/images/about-images/about-image-' + ${linkStat.index+1} + '.jpg'}" th:onclick="'javascript:linkFirend(\''+${link.slug}+'\')'" class="img-responsive"/>
+<!--                                        <img th:src="@{'/site/images/about-images/about-image-' + ${linkStat.index+1} + '.jpg'}" th:onclick="'javascript:linkFirend(\''+${link.slug}+'\')'" class="img-responsive"/>-->
 
-                                        <figcaption>
+<!--                                        <figcaption>-->
 
-                                            <h3><th:block th:text="${link.name}"></th:block></h3>
+<!--                                            <h3><th:block th:text="${link.name}"></th:block></h3>-->
 
-                                            <h5><th:block th:text="${link.description}"></th:block></h5>
+<!--                                            <h5><th:block th:text="${link.description}"></th:block></h5>-->
 
-                                        </figcaption>
+<!--                                        </figcaption>-->
 
-                                    </figure>
+<!--                                    </figure>-->
 
-                                </section>
-                            </th:block>
+<!--                                </section>-->
+<!--                            </th:block>-->
 
-                        </th:block>
+<!--                        </th:block>-->
 
 
 
-                        
+<!--                        -->
 
-                     
+<!--                     -->
 
-                    </div>
+<!--                    </div>-->
+                <div class="thumbnails-pan">
+                    <th:block th:each="link: ${links}">
+<!--                        <th:block th:if="${linkStat.index < 3}">-->
+                            <section class="col-xs-12 col-sm-4 col-md-4 col-lg-4 ">
+
+                                <figure>
+
+<!--                                    <img th:src="@{'/site/images/about-images/about-image-' + ${linkStat.index+1} + '.jpg'}" th:onclick="'javascript:linkFirend(\''+${link.slug}+'\')'" class="img-responsive"/>-->
+                                    <img th:src="@{${link.description}}" th:onclick="'javascript:linkFirend(\''+${link.slug}+'\')'" class="img-responsive"/>
+
+                                    <figcaption>
+
+                                        <h3><th:block th:text="${link.name}"></th:block></h3>
+
+<!--                                        <h5><th:block th:text="${link.description}"></th:block></h5>-->
+
+                                    </figcaption>
+
+                                </figure>
+
+                            </section>
+<!--                        </th:block>-->
+
+                    </th:block>
+
+
+
+
+
+
+
+                </div>
+
 
                 <!-- thumbnails -->
 
