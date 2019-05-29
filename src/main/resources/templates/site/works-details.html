@@ -70,7 +70,8 @@
 
                             <ul class="grid-lod effect-2" id="grid">
                                 <th:block th:each="pic : ${commons.show_all_thumb(archive.content)}">
-                                    <li><img th:src="${pic}" alt="" class="img-responsive"/></li>
+                                    <li><img th:src="${pic.src}" th:alt="${pic.alt}" th:title="${pic.title}" class="img-responsive"/></li>
+                                    <br/>
                                 </th:block>
                             </ul>
 

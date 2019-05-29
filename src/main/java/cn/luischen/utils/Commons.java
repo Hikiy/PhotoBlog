@@ -437,40 +437,11 @@ public class Commons {
      * 获取文章中的所有图片
      * @param content
      * @return
+     * @Author Hiki 2019.05.29修改：修复只加载一张图片bug；修复alt和title属性没加载的bug
      */
-    public static List<String> show_all_thumb(String content) {
-//        List<String> rs = new LinkedList();
-//        content = TaleUtils.mdToHtml(content);
-//        System.out.println("toHTML" + content);
-//        System.out.println("--------------------------------------");
-//        if (content.contains("<img")) {
-//            String img = "";
-//            String regEx_img = "<[a-zA-Z]+.*?>([\\s\\S]*?)</[a-zA-Z]*>";
-//            Pattern p_image = Pattern.compile(regEx_img, Pattern.MULTILINE);
-//            Matcher m_image = p_image.matcher(content);
-//            while (m_image.find()) {
-//                String data = m_image.group(1).trim();
-//                if(!"".equals(data) && data.contains("<img")) {
-//                    System.out.println(data);
-//                    // //匹配src
-//                    Matcher m = Pattern.compile("src\\s*=\\s*\'?\"?(.*?)(\'|\"|>|\\s+)").matcher(data);
-//                    if (m.find()) {
-//                        rs.add(m.group(1));
-//                    }
-//                }
-//
-//            }
-//        }
-//        System.out.println("----------------最终------------------------");
-//        for (String s:rs
-//             ) {
-//            System.out.println(s);
-//        }
-//        return rs;
-        List<String> rs = new LinkedList();
+    public static List<WorksDomain> show_all_thumb(String content) {
+        List<WorksDomain> rs = new LinkedList();
         content = TaleUtils.mdToHtml(content);
-        System.out.println("toHTML" + content);
-        System.out.println("--------------------------------------");
         if (content.contains("<img")) {
             String img = "";
             Pattern p_image;
@@ -480,20 +451,28 @@ public class Commons {
             p_image = Pattern.compile
                     (regEx_img, Pattern.CASE_INSENSITIVE);
             m_image = p_image.matcher(content);
+
             while (m_image.find()) {
+                WorksDomain wd = new WorksDomain();
                 // 得到<img />数据
                 img = m_image.group();
                 // 匹配<img>中的src数据
                 Matcher m = Pattern.compile("src\\s*=\\s*\"?(.*?)(\"|>|\\s+)").matcher(img);
                 while (m.find()) {
-                    rs.add(m.group(1));
+                    wd.setSrc(m.group(1));
                 }
+                // 匹配<img>中的alt数据
+                Matcher a = Pattern.compile("alt\\s*=\\s*\"?(.*?)(\"|>|\\s+)").matcher(img);
+                while (a.find()) {
+                    wd.setAlt(a.group(1));
+                }
+                // 匹配<img>中的title数据
+                Matcher t = Pattern.compile("title\\s*=\\s*\"?(.*?)(\"|>|\\s+)").matcher(img);
+                while (t.find()) {
+                    wd.setTitle(t.group(1));
+                }
+                rs.add(wd);
             }
-        }
-        System.out.println("----------------最终------------------------");
-        for (String s:rs
-        ) {
-            System.out.println(s);
         }
         return rs;
     }

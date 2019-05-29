@@ -1,11 +1,20 @@
 # Blog
 测试用博客
-使用的是一个博主的博客进行改造。
+
+网上找的博客进行改造。
 
 发现很多bug 正在修复中。。。
 
-`------------------------------------------------------------------------------------`
 # 部署
+克隆完直接在idea运行
+
+**已发现的bug都修复完成**
+
+---
+
+# 下面是debug记录
+
+
 克隆完直接在idea运行，但是发现报错`sun.misc.BASE64Encoder找不到jar包`
 
 解决方案：  
@@ -141,4 +150,59 @@ List<String> rs = new LinkedList();
         }
         return rs;
 ```
-这样就可以加载多张图片了。但是还是没有文字。
+这样就可以加载多张图片了。但是还是没有文字，于是我添加多了一个实体类`WorkDomain`用于存储`<img>`标签中的`src`、`alt`、`title`属性。然后在前端遍历获取再拼接:  
+
+- `Commons.java`的`show_all_thumb(String content)`:
+```
+    public static List<WorksDomain> show_all_thumb(String content) {
+        List<WorksDomain> rs = new LinkedList();
+        content = TaleUtils.mdToHtml(content);
+        if (content.contains("<img")) {
+            String img = "";
+            Pattern p_image;
+            Matcher m_image;
+            //图片链接地址
+            String regEx_img = "<img.*src\\s*=\\s*(.*?)[^>]*?>";
+            p_image = Pattern.compile
+                    (regEx_img, Pattern.CASE_INSENSITIVE);
+            m_image = p_image.matcher(content);
+
+            while (m_image.find()) {
+                WorksDomain wd = new WorksDomain();
+                // 得到<img />数据
+                img = m_image.group();
+                // 匹配<img>中的src数据
+                Matcher m = Pattern.compile("src\\s*=\\s*\"?(.*?)(\"|>|\\s+)").matcher(img);
+                while (m.find()) {
+                    wd.setSrc(m.group(1));
+                }
+                // 匹配<img>中的alt数据
+                Matcher a = Pattern.compile("alt\\s*=\\s*\"?(.*?)(\"|>|\\s+)").matcher(img);
+                while (a.find()) {
+                    wd.setAlt(a.group(1));
+                }
+                // 匹配<img>中的title数据
+                Matcher t = Pattern.compile("title\\s*=\\s*\"?(.*?)(\"|>|\\s+)").matcher(img);
+                while (t.find()) {
+                    wd.setTitle(t.group(1));
+                }
+                rs.add(wd);
+            }
+        }
+        return rs;
+    }
+```
+- `work_detail.html`:
+```
+<div class="work-images grid">
+
+    <ul class="grid-lod effect-2" id="grid">
+        <th:block th:each="pic : ${commons.show_all_thumb(archive.content)}">
+            <li><img th:src="${pic.src}" th:alt="${pic.alt}" th:title="${pic.title}" class="img-responsive"/></li>
+            <br/>
+        </th:block>
+    </ul>
+
+</div>
+```
+只剩下文字没有解决。想法：既然是发照片的，也不用那么多描述了，就有个标题就好了
