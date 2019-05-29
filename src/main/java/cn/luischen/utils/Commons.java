@@ -2,6 +2,7 @@ package cn.luischen.utils;
 
 import cn.luischen.constant.WebConst;
 import cn.luischen.model.ContentDomain;
+import cn.luischen.model.WorksDomain;
 import com.github.pagehelper.PageInfo;
 import com.vdurmont.emoji.EmojiParser;
 import org.apache.commons.lang3.StringUtils;
@@ -438,25 +439,61 @@ public class Commons {
      * @return
      */
     public static List<String> show_all_thumb(String content) {
+//        List<String> rs = new LinkedList();
+//        content = TaleUtils.mdToHtml(content);
+//        System.out.println("toHTML" + content);
+//        System.out.println("--------------------------------------");
+//        if (content.contains("<img")) {
+//            String img = "";
+//            String regEx_img = "<[a-zA-Z]+.*?>([\\s\\S]*?)</[a-zA-Z]*>";
+//            Pattern p_image = Pattern.compile(regEx_img, Pattern.MULTILINE);
+//            Matcher m_image = p_image.matcher(content);
+//            while (m_image.find()) {
+//                String data = m_image.group(1).trim();
+//                if(!"".equals(data) && data.contains("<img")) {
+//                    System.out.println(data);
+//                    // //匹配src
+//                    Matcher m = Pattern.compile("src\\s*=\\s*\'?\"?(.*?)(\'|\"|>|\\s+)").matcher(data);
+//                    if (m.find()) {
+//                        rs.add(m.group(1));
+//                    }
+//                }
+//
+//            }
+//        }
+//        System.out.println("----------------最终------------------------");
+//        for (String s:rs
+//             ) {
+//            System.out.println(s);
+//        }
+//        return rs;
         List<String> rs = new LinkedList();
         content = TaleUtils.mdToHtml(content);
+        System.out.println("toHTML" + content);
+        System.out.println("--------------------------------------");
         if (content.contains("<img")) {
             String img = "";
-            String regEx_img = "<[a-zA-Z]+.*?>([\\s\\S]*?)</[a-zA-Z]*>";
-            Pattern p_image = Pattern.compile(regEx_img, Pattern.MULTILINE);
-            Matcher m_image = p_image.matcher(content);
+            Pattern p_image;
+            Matcher m_image;
+            //图片链接地址
+            String regEx_img = "<img.*src\\s*=\\s*(.*?)[^>]*?>";
+            p_image = Pattern.compile
+                    (regEx_img, Pattern.CASE_INSENSITIVE);
+            m_image = p_image.matcher(content);
             while (m_image.find()) {
-                String data = m_image.group(1).trim();
-                if(!"".equals(data) && data.contains("<img")) {
-                    System.out.println(data);
-                    // //匹配src
-                    Matcher m = Pattern.compile("src\\s*=\\s*\'?\"?(.*?)(\'|\"|>|\\s+)").matcher(data);
-                    if (m.find()) {
-                        rs.add(m.group(1));
-                    }
+                // 得到<img />数据
+                img = m_image.group();
+                // 匹配<img>中的src数据
+                Matcher m = Pattern.compile("src\\s*=\\s*\"?(.*?)(\"|>|\\s+)").matcher(img);
+                while (m.find()) {
+                    rs.add(m.group(1));
                 }
-
             }
+        }
+        System.out.println("----------------最终------------------------");
+        for (String s:rs
+        ) {
+            System.out.println(s);
         }
         return rs;
     }
