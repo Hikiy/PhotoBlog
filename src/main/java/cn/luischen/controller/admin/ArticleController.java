@@ -8,10 +8,12 @@ import cn.luischen.dto.cond.MetaCond;
 import cn.luischen.exception.BusinessException;
 import cn.luischen.model.ContentDomain;
 import cn.luischen.model.MetaDomain;
+import cn.luischen.model.UserDomain;
 import cn.luischen.service.content.ContentService;
 import cn.luischen.service.log.LogService;
 import cn.luischen.service.meta.MetaService;
 import cn.luischen.utils.APIResponse;
+import cn.luischen.utils.TaleUtils;
 import com.github.pagehelper.PageInfo;
 //import com.sun.org.apache.xpath.internal.operations.Bool;
 import io.swagger.annotations.Api;
@@ -30,6 +32,7 @@ import java.util.List;
 /**
  * 文章管理
  * Created by Donghua.Chen on 2018/4/30.
+ * fix hits,commentsNum bug by Hiki on 2019/05/30.
  */
 @Api("文章管理")
 @Controller
@@ -120,6 +123,11 @@ public class ArticleController extends BaseController {
         //只允许博客文章有分类，防止作品被收入分类
         contentDomain.setCategories(type.equals(Types.ARTICLE.getType()) ? categories : null);
         contentDomain.setAllowComment(allowComment ? 1 : 0);
+        contentDomain.setHits(0);
+        contentDomain.setCommentsNum(0);
+        UserDomain user = TaleUtils.getLoginUser(request);
+        Integer uid = user.getUid();
+        contentDomain.setAuthorId(uid);
 
         contentService.addArticle(contentDomain);
 

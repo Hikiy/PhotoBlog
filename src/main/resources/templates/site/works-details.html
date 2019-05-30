@@ -40,7 +40,7 @@
 
                                 	<h2 th:text="${archive.title}"></h2>
 
-                                    <h6 th:utext="${commons.fmtdate_en(archive.created)}"></h6>
+                                    <h6 th:utext="${commons.fmtdate_en(archive.created)} + '   浏览 '+ ${archive.hits} + ' 次'"></h6>
 
                                 </header>
 

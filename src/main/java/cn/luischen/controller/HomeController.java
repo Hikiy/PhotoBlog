@@ -36,6 +36,7 @@ import java.util.List;
 /**
  * 首页和关于我的页面控制器
  * Created by Donghua.Chen on 2018/4/28.
+ * Update by Hiki on 2019/05/30.
  */
 @Api("网站首页和关于页面")
 @Controller
@@ -107,13 +108,13 @@ public class HomeController extends BaseController{
                     Integer cid,
             HttpServletRequest request
     ){
-        ContentDomain atricle = contentService.getAtricleById(cid);
-        request.setAttribute("article", atricle);
+        ContentDomain article = contentService.getAtricleById(cid);
+        request.setAttribute("article", article);
         ContentCond contentCond = new ContentCond();
         contentCond.setType(Types.ARTICLE.getType());
 //        this.blogBaseData(request, contentCond);//获取公共分类标签等数据
         //更新文章的点击量
-        this.updateArticleHit(atricle.getCid(),atricle.getHits());
+        this.updateArticleHit(article.getCid(),article.getHits());
         List<CommentDomain> commentsPaginator = commentService.getCommentsByCId(cid);
         request.setAttribute("comments", commentsPaginator);
         request.setAttribute("active","blog");
@@ -122,25 +123,26 @@ public class HomeController extends BaseController{
     }
     /**
      * 更新文章的点击率
-     *
+     * fix by Hiki on 2019/05/30
      * @param cid
      * @param chits
      */
-    private void updateArticleHit(Integer cid, Integer chits) {
-        Integer hits = cache.hget("article", "hits");
-        if (chits == null) {
-            chits = 0;
-        }
+    private void updateArticleHit(Integer cid, Integer hits) {
+//        Integer hits = cache.hget("article", "hits");
+//        if (chits == null) {
+//            chits = 0;
+//        }
         hits = null == hits ? 1 : hits + 1;
-        if (hits >= WebConst.HIT_EXCEED) {
+//        if (hits >= WebConst.HIT_EXCEED) {
             ContentDomain temp = new ContentDomain();
             temp.setCid(cid);
-            temp.setHits(chits + hits);
+//            temp.setHits(chits + hits);
+            temp.setHits(hits);
             contentService.updateContentByCid(temp);
-            cache.hset("article", "hits", 1);
-        } else {
-            cache.hset("article", "hits", hits);
-        }
+//            cache.hset("article", "hits", 1);
+//        } else {
+//            cache.hset("article", "hits", hits);
+//        }
     }
 
 
@@ -460,6 +462,9 @@ public class HomeController extends BaseController{
         ContentDomain article = contentService.getAtricleById(cid);
         request.setAttribute("archive", article);
         request.setAttribute("active","work");
+//        article.setHits(article.getHits()+1);
+//        contentService.updateContentByCid(article);
+        this.updateArticleHit(article.getCid(),article.getHits());
         return "site/works-details";
     }
 
